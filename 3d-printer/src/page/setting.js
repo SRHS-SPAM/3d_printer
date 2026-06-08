@@ -68,7 +68,7 @@ function Setting() {
 
             {/* 로그아웃/회원 탈퇴 */}
             <h2 className="head">로그아웃/회원 탈퇴</h2>
-            <div className="setting-item" onClick={() => navigate('/')}>
+            <div className="setting-item" onClick={() => navigate('/login')}>
               <span>로그아웃</span>
               <img src="/arrow.svg" alt="arrow" className="arrow-img" />
             </div>
