@@ -21,7 +21,12 @@ p {
   /* margin: 0;             margin-left: 20% 제거 */
 }
 
-
+.printer-name {
+  font-size: 12px;
+  color: #000000;
+  margin: 0 0 20px 0;
+  text-align: center;
+}
 
 
 .res-button{

@@ -1,62 +1,75 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './reservationPage.css';
 
 function ReservationPage({ printerStates, setPrinterStates }) {
-  console.log('printerStates:', printerStates); // 이게 정확히 여기 있어야 해요
   const navigate = useNavigate();
-    // const [printerStates, setPrinterStates] = useState([true, true, true, true]);
-      // 💡 클릭한 프린터(index)의 상태만 반대로 뒤집는 함수
-      const handleUseClick = (index) => {
-        const newStates = [...printerStates];
-        newStates[index] = !newStates[index];
-        setPrinterStates(newStates);
-      
-    };
 
-        // 임시로 기존 에러를 방지하기 위해 첫 번째 프린터의 상태를 대표로 정의해 둡니다.
-  const isAvailable = printerStates[0];
-    return (
-        <>
-        <div className="res-title">
-            <img src="/res.png" alt="R" className="r-image" /> 
-            <p className="title-font res-font">모든 예약은 이곳에서 하세요.</p>
-            <hr/>
+  const handleReserve = (index) => {
+    const newStates = [...printerStates];
+    if (newStates[index] === 'in_use') {
+      newStates[index] = 'reserved';   // 예약하기 → reserved
+    } else if (newStates[index] === 'reserved') {
+      newStates[index] = 'in_use';     // 예약 취소 → 다시 in_use
+    }
+    setPrinterStates(newStates);
+  };
+
+  const getImage = (state) => {
+    if (state === 'available') return '/Available.png';
+    if (state === 'reserved') return '/bookable.png';
+    return '/In_Use.png';
+  };
+
+  const getButtonText = (state) => {
+    if (state === 'available') return '사용 불가';
+    if (state === 'reserved') return '예약 취소';
+    return '예약하기';
+  };
+
+  const getButtonClass = (state) => {
+    if (state === 'available') return 'unavailable';
+    if (state === 'reserved') return 'reserved';
+    return 'available';
+  };
+
+  return (
+    <>
+      <div className="res-title">
+        <img src="/res.png" alt="R" className="r-image" />
+        <p className="title-font res-font">모든 예약은 이곳에서 하세요.</p>
+        <hr/>
+      </div>
+      <div className="main-container">
+        <div className="title-row">
+          <p className="title-font">예약</p>
         </div>
-        <div className="main-container">
-            <div className="title-row">
-                <p className="title-font">예약</p>
-            </div>
-            <div className="status-container">
-                <p>2층 소프트웨어 3D프린터</p>
-                <hr/>
-                
-                {/* 🚀 [추가된 코드] 이미지와 버튼이 개별적으로 짝을 이뤄 4개가 나오는 영역 (CSS 분리 완료) */}
-                <div className="image-container-new">
-                {printerStates.map((state, index) => (
-                    <div key={index} className="printer-card">
-                    <img 
-                        src={state ? "/Available.png" : "/In_Use.png"} 
-                        alt={state ? "사용 가능" : "사용 불가"} 
-                        className="status-img-new" 
-                    />
-                    <button 
-                        onClick={() => handleUseClick(index)}
-                        className={`status-button-new ${state ? 'available' : 'unavailable'}`}
-                    >
-                        {state ? '사용하기' : '사용 불가'}
-                    </button>
-                    </div>
-                ))}
-                </div>
-
-
-
-            </div>
+        <div className="status-container">
+          <p>2층 소프트웨어 3D프린터</p>
+          <hr/>
+          <div className="image-container-new">
+            {printerStates.map((state, index) => (
+              <div key={index} className="printer-card">
+                <p className="printer-name">프린터{['A','B','C','D'][index]}</p>  {/* ✅ 추가 */}
+                <img
+                  src={getImage(state)}
+                  alt={state}
+                  className="status-img-new"
+                />
+                <button
+                  onClick={() => handleReserve(index)}
+                  disabled={state === 'available'}  /* 사용 가능일 때 버튼 비활성 */
+                  className={`status-button-new ${getButtonClass(state)}`}
+                >
+                  {getButtonText(state)}
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-        </>
-    );
+      </div>
+    </>
+  );
 }
-
 
 export default ReservationPage;

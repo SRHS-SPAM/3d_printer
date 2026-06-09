@@ -16,7 +16,8 @@ import './App.css';
 
 function AppContent() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [printerStates, setPrinterStates] = useState([true, true, true, true]);
+  // 'available', 'reserved', 'in_use' 세 가지 상태
+  const [printerStates, setPrinterStates] = useState(['available', 'available', 'available', 'available']);
   const location = useLocation();
 
   // 💡 1. 헤더와 푸터를 완전히 숨겨야 하는 "독립 페이지" 주소 정의
